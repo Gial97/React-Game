@@ -1,0 +1,33 @@
+.card {
+  font-size: 75px;
+  margin: 2% 0.5%;
+  display: flex;
+  min-width: 150px;
+  min-height: 150px;
+  cursor: pointer;
+  border-radius: 20%;
+}
+
+.cards {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+  
+.card.hidden {background: rgba(206, 206, 8, 0.616)}
+.card.justMatched{background-color: rgb(3, 182, 3)}
+.card.justMismatched {background-color:  rgb(255, 0, 0)}
+.card.visible {
+  cursor: not-allowed;
+  background: rgb(206, 204, 204);
+}
+  
+.symbol {margin: auto}
+
+@media only screen and (max-width: 740px) {
+  .card{
+    min-width: 105px;
+    min-height: 105px;
+    font-size: 55px;
+  }
+}
