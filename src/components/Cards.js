@@ -1,6 +1,6 @@
 import shuffle from 'shuffle-array';
 
-class MemoryCards {
+class Cards {
   constructor() {
     this.cards = [];
     this.NUM_IMAGES = 10;
@@ -57,4 +57,4 @@ class MemoryCards {
 
 };
 
-export default MemoryCards;
+export default Cards;

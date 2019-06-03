@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './components/Card.css';
 import './components/Game.css';
-import CardView from './components/CardView';
-import MemoryCards from './components/Cards';
+import View from './components/View';
+import Cards from './components/Cards';
 
 
 class App extends Component {
@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
     this.cardClicked = this.cardClicked.bind(this);
     this.playAgain = this.playAgain.bind(this);
-    this.memoryCards = new MemoryCards();
+    this.Cards = new Cards();
   }
 
   componentWillMount() {
@@ -18,7 +18,7 @@ class App extends Component {
   }
 
   startGame() {
-    this.memoryCards.generateCards();
+    this.Cards.generateCards();
     this.setState({
       turnNo : 1,
       pairsFound : 0,
@@ -31,8 +31,8 @@ class App extends Component {
   cardViews() {
     let cardViews = [];
     let onClick = this.cardClicked;
-    this.memoryCards.cards.forEach(c => {
-      let cardView = <CardView key={c.id} 
+    this.Cards.cards.forEach(c => {
+      let cardView = <View key={c.id} 
         id={c.id} 
         image={c.image}
         imageUp = {c.imageUp}
@@ -47,8 +47,8 @@ class App extends Component {
     if (this.state.numClicksWithinTurn !== 2) {
       return;
     }
-    this.memoryCards.flipCard(this.state.firstId, false);
-    this.memoryCards.flipCard(this.state.secondId, false);
+    this.Cards.flipCard(this.state.firstId, false);
+    this.Cards.flipCard(this.state.secondId, false);
     this.setState({
       firstId: undefined,
       secondId: undefined,
@@ -63,21 +63,21 @@ class App extends Component {
         clearTimeout(this.timeout);
         this.clearCards(this.state.firstId, this.state.secondId);        
       }
-      this.memoryCards.flipCard(id, true);
+      this.Cards.flipCard(id, true);
       this.setState({
         firstId : id,
         numClicksWithinTurn : 1
       });
     } else if (this.state.numClicksWithinTurn === 1) {
-      this.memoryCards.flipCard(id, true);
+      this.Cards.flipCard(id, true);
       this.setState({
         secondId : id,
         numClicksWithinTurn : 2
       });
 
-      if (this.memoryCards.cardsIdenticalImages(id, this.state.firstId)) {
-        this.memoryCards.setCardMatched(this.state.firstId, true);
-        this.memoryCards.setCardMatched(id, true);
+      if (this.Cards.cardsIdenticalImages(id, this.state.firstId)) {
+        this.Cards.setCardMatched(this.state.firstId, true);
+        this.Cards.setCardMatched(id, true);
         this.setState({
           pairsFound: this.state.pairsFound+1,
           firstId: undefined,
@@ -106,7 +106,7 @@ class App extends Component {
       <div>Znalezione pary: {this.state.pairsFound}</div>
     </div>;
 
-    if (this.state.pairsFound === this.memoryCards.NUM_IMAGES) {
+    if (this.state.pairsFound === this.Cards.NUM_IMAGES) {
       gameStatus = <div className='Status'>
         <div>GRA UKOŃCZONA!</div>
         <div>Użyłeś {this.state.turnNo-1} tór(y)</div>
