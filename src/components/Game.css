@@ -1,0 +1,20 @@
+.Game {
+    text-align: center;
+    padding: 2%;
+  }
+    
+.Game-header {
+    background-color: #222;
+    height: 50px;
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+    background-color: rgb(38, 38, 122);
+    border-radius: 25px;
+    margin: 10%, 10%;
+  }
+    
+.Game-title {font-size: 50px}
+.Game-status {padding: 15px}
+.Game-intro {font-size: large}
+.Game-status div:first-of-type {font-size: 30px}

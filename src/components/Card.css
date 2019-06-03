@@ -1,0 +1,42 @@
+.Card {
+  display: flex;
+  max-width: 150px;
+  max-height: 150px;  
+  border-radius: 20%; 
+}
+
+.On-Cards {
+  display: flex;
+  background-color: #0e9649;
+  border-radius: 20%; 
+  margin: 2% 0.5%;
+}
+  
+.Matched {filter: opacity(50%)}
+  
+.CardContainer {
+  max-width: 950px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+@media only screen and (max-width: 900px) {
+  .Card {
+    max-width: 125px;
+    max-height: 125px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .Card {
+    max-width: 100px;
+    max-height: 100px;
+  }
+}
+button {
+  background-color: rgb(5, 5, 71);
+  color: rgb(231, 228, 228);
+  font-size: 20px;
+  border-radius: 20px;
+}

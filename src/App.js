@@ -1,110 +1,133 @@
-import React, { Component } from 'react'
-import shuffle from 'lodash.shuffle'
+import React, { Component } from 'react';
+import './components/Card.css';
+import './components/Game.css';
+import CardView from './components/CardView';
+import MemoryCards from './components/Cards';
 
-import './App.css'
-
-import Card from './components/card/Card'
-import Scores from './components/score/Scores'
-const SIDE = 10
-const SYMBOLS = '👹👺👽👻☠👾🤖💩😺🐱‍👤🐱‍🚀🦁🐯🐺🐶🐭🐹🐰🐗🐷🐮🐻🐨🐼🐸🎁🎊🎃🎒👕🧥👖🧤🎱🏉🏀🏐⚾⚽🔮🎳💎🎓🎯🏆🎮🔈🔔🃏🔮🔒🎹📱💻🔋🏹📀📷🎥💼🍟🥞🥗🍪🍧🍎🍄🥥🏺🥃🌸💐🍁'
-const VISUAL_PAUSE_MSECS = 550
 
 class App extends Component {
-  state = {
-    cards: this.generateCards(),
-    currentPair: [],
-    scores: 0,
-    matchedCardIndices: []
+  constructor(props) {
+    super(props);
+    this.cardClicked = this.cardClicked.bind(this);
+    this.playAgain = this.playAgain.bind(this);
+    this.memoryCards = new MemoryCards();
   }
 
-  handleCardClick = index => {
-    const { currentPair } = this.state
-
-    if (currentPair.length === 2) {
-      return
-    }
-
-    if (currentPair.length === 0) {
-      this.setState({ currentPair: [index] })
-      return
-    }
-
-    this.handleNewPairClosedBy(index)
+  componentWillMount() {
+    this.startGame();
   }
 
-  getFeedbackForCard(index) {
-    const { currentPair, matchedCardIndices } = this.state
-    const indexMatched = matchedCardIndices.includes(index)
-
-    if (currentPair.length < 2) {
-      return indexMatched || index === currentPair[0] ? 'visible' : 'hidden'
-    }
-
-    if (currentPair.includes(index)) {
-      return indexMatched ? 'justMatched' : 'justMismatched'
-    }
-
-    return indexMatched ? 'visible' : 'hidden'
-  }
-  
-  handleCardClick = index => {
-    const { currentPair } = this.state
-
-    if (currentPair.length === 2) {
-      return
-    }
-
-    if (currentPair.length === 0) {
-      this.setState({ currentPair: [index] })
-      return
-    }
-
-    this.handleNewPairClosedBy(index)
+  startGame() {
+    this.memoryCards.generateCards();
+    this.setState({
+      turnNo : 1,
+      pairsFound : 0,
+      numClicksWithinTurn : 0,
+      firstId : undefined,
+      secondId : undefined
+    });
   }
 
-  handleNewPairClosedBy(index) {
-    const { cards, currentPair, scores, matchedCardIndices } = this.state
-    const newPair = [currentPair[0], index]
-    const newScores = scores + 1
-    const matched = cards[newPair[0]] === cards[newPair[1]]
-    this.setState({ currentPair: newPair, scores: newScores })
-    if (matched) {
-      this.setState({ matchedCardIndices: [...matchedCardIndices, ...newPair] })
-    }
-    setTimeout(() => this.setState({ currentPair: [] }), VISUAL_PAUSE_MSECS)
+  cardViews() {
+    let cardViews = [];
+    let onClick = this.cardClicked;
+    this.memoryCards.cards.forEach(c => {
+      let cardView = <CardView key={c.id} 
+        id={c.id} 
+        image={c.image}
+        imageUp = {c.imageUp}
+        matched = {c.matched} 
+        onClick={onClick}/>;
+        cardViews.push(cardView);
+    });
+    return cardViews;
   }
 
-  generateCards() {
-    const result = []
-    const size = SIDE * 2
-    const candidates = shuffle(SYMBOLS)
-    while (result.length < size) {
-      const card = candidates.pop()
-      result.push(card, card)
+  clearCards(id1,id2) {
+    if (this.state.numClicksWithinTurn !== 2) {
+      return;
     }
-    return shuffle(result)
+    this.memoryCards.flipCard(this.state.firstId, false);
+    this.memoryCards.flipCard(this.state.secondId, false);
+    this.setState({
+      firstId: undefined,
+      secondId: undefined,
+      numClicksWithinTurn: 0,
+      turnNo : this.state.turnNo+1
+    });
   }
 
+  cardClicked(id,image) {
+    if (this.state.numClicksWithinTurn === 0 || this.state.numClicksWithinTurn === 2) {
+      if (this.state.numClicksWithinTurn === 2) {
+        clearTimeout(this.timeout);
+        this.clearCards(this.state.firstId, this.state.secondId);        
+      }
+      this.memoryCards.flipCard(id, true);
+      this.setState({
+        firstId : id,
+        numClicksWithinTurn : 1
+      });
+    } else if (this.state.numClicksWithinTurn === 1) {
+      this.memoryCards.flipCard(id, true);
+      this.setState({
+        secondId : id,
+        numClicksWithinTurn : 2
+      });
+
+      if (this.memoryCards.cardsIdenticalImages(id, this.state.firstId)) {
+        this.memoryCards.setCardMatched(this.state.firstId, true);
+        this.memoryCards.setCardMatched(id, true);
+        this.setState({
+          pairsFound: this.state.pairsFound+1,
+          firstId: undefined,
+          secondId: undefined,
+          turnNo : this.state.turnNo+1,
+          numClicksWithinTurn: 0
+        });
+
+      } else {
+        this.timeout = setTimeout(() => { 
+          this.clearCards(this.state.firstId, this.state.secondId);
+        },1250); 
+      }
+
+    }
+  }
+
+  playAgain() {
+    this.startGame();
+  }
 
   render() {
-    const { cards, scores} = this.state
+    let cardViews = this.cardViews();
+    let gameStatus = <div className='Game-status'>
+      <div>Tura: {this.state.turnNo}</div>
+      <div>Znalezione pary: {this.state.pairsFound}</div>
+    </div>;
+
+    if (this.state.pairsFound === this.memoryCards.NUM_IMAGES) {
+      gameStatus = <div className='Game-status'>
+        <div>GRA UKOŃCZONA!</div>
+        <div>Użyłeś {this.state.turnNo-1} tór(y)</div>
+        <div><button onClick={this.playAgain}>Zagraj ponownie!</button></div>
+      </div>;      
+    }
+
     return (
-      <div className="memory">
-        <div className='score'><Scores scores={scores} /></div>
-        < div className='cards'>
-          {cards.map((card, index) => (
-            <Card
-              card={card}
-              feedback={this.getFeedbackForCard(index)}
-              key={index}
-              index={index}
-              onClick={this.handleCardClick}
-            />
-          ))}
+      <div className='Game'>
+        <header className='Game-header'>
+          <div className='Game-title'>Gra Memory</div>
+        </header>
+        <div>
+          {gameStatus}
+        </div>
+        <div className='CardContainer'>
+          {cardViews}
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;
