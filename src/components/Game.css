@@ -3,7 +3,7 @@
     padding: 2%;
   }
     
-.Game-header {
+.Header {
     background-color: #222;
     height: 50px;
     max-width: 1100px;
@@ -14,7 +14,6 @@
     margin: 10%, 10%;
   }
     
-.Game-title {font-size: 50px}
-.Game-status {padding: 15px}
-.Game-intro {font-size: large}
-.Game-status div:first-of-type {font-size: 30px}
+.Title {font-size: 50px}
+.Status {padding: 15px}
+.Status div:first-of-type {font-size: 30px}

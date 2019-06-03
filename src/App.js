@@ -101,13 +101,13 @@ class App extends Component {
 
   render() {
     let cardViews = this.cardViews();
-    let gameStatus = <div className='Game-status'>
+    let gameStatus = <div className='Status'>
       <div>Tura: {this.state.turnNo}</div>
       <div>Znalezione pary: {this.state.pairsFound}</div>
     </div>;
 
     if (this.state.pairsFound === this.memoryCards.NUM_IMAGES) {
-      gameStatus = <div className='Game-status'>
+      gameStatus = <div className='Status'>
         <div>GRA UKOŃCZONA!</div>
         <div>Użyłeś {this.state.turnNo-1} tór(y)</div>
         <div><button onClick={this.playAgain}>Zagraj ponownie!</button></div>
@@ -116,8 +116,8 @@ class App extends Component {
 
     return (
       <div className='Game'>
-        <header className='Game-header'>
-          <div className='Game-title'>Gra Memory</div>
+        <header className='Header'>
+          <div className='Title'>Gra Memory</div>
         </header>
         <div>
           {gameStatus}
