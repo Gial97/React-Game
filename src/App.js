@@ -14,10 +14,10 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.startGame();
+    this.start()
   }
 
-  startGame() {
+  start() {
     this.Cards.generateCards();
     this.setState({
       turnNo : 1,
@@ -96,7 +96,7 @@ class App extends Component {
   }
 
   playAgain() {
-    this.startGame();
+    this.start();
   }
 
   render() {

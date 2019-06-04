@@ -32,7 +32,7 @@ class Cards {
   }
 
   getCard(id) {
-    for(let i=0; i < 2*this.NUM_IMAGES; i++) {
+    for(let i=0; i < this.NUM_IMAGES*2; i++) {
       if (this.cards[i].id === id) {
         return this.cards[i];
       }
@@ -40,19 +40,18 @@ class Cards {
   }
 
   flipCard(id, imageUp) {
-    this.getCard(id).imageUp = imageUp;
+    this.getCard(id).imageUp = imageUp
   }
 
   setCardMatched(id, matched) {
-    this.getCard(id).matched = matched;
+    this.getCard(id).matched = matched
   }
 
   cardsIdenticalImages(id1, id2) {
     if (this.getCard(id1).image === this.getCard(id2).image) {
-      return true;
+      return true
     } else {
-      return false;
-    }
+      return false}
   }
 
 };

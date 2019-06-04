@@ -29,8 +29,8 @@ class View extends Component {
 
     return (
       <div className='On-Cards'>
-        <img className={className} src={require(`${imPath}`)} alt='' onClick={this.onClick}/>
-        </div>
+        <img className={className} src={require(`${imPath}`)} alt='obrazek' onClick={this.onClick}/>
+      </div>
     );      
   };
 };
